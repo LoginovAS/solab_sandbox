@@ -19,6 +19,10 @@ class PeeweeConnectionMiddleware(object):
         if not psql_db.is_closed():
             psql_db.close()
 
+# def init_tables():
+#     print("init_tables meshod creates tables")
+#     psql_db.create_tables([GranulePolygon, UserTag], safe=True)
+
 class BaseModel(Model):
     class Meta:
         database=psql_db
@@ -38,5 +42,9 @@ class GranulePolygon(BaseModel):
     class Meta:
         db_table = 'granule_polygons'
 
-def init_tables():
-    psql_db.create_tables([GranulePolygon], safe=True)
+class UserTag(BaseModel):
+    user_id = CharField()
+    tag_name = CharField()
+
+    class Meta:
+        db_table = 'user_tags'
