@@ -6,7 +6,7 @@ from datetime import datetime
 
 from models import *
 
-class GranulePolygonController(object):
+class GPolygon(object):
 
     json_args = {
         'product_id': fields.Str(),
@@ -56,18 +56,21 @@ class GranulePolygonController(object):
         print(args)
         add_date = datetime.now()
         date = args['date']
-        # add_date = arrow.now
-        # date = arrow.get(args['date'])
 
+        user_id = args['user_id']
+        tag_name = args['tag_name']
+
+        # Create new entities:
+        #   Create new Granule polygon record
         gp = GranulePolygon.create(
             visualizationparameter = args['VisualizationParameter'],
             polarization = args['polarization'],
             granule_name = args['granule_name'],
             coords = args['coords'],
-            user_id = args['user_id'],
+            user_id = user_id,
             add_date = add_date,
             date = date,
-            tag_name = args['tag_name']
+            tag_name = tag_name
         )
 
         if (args.get('product_id') is not None):
@@ -77,7 +80,15 @@ class GranulePolygonController(object):
         if args.get(granule_uid) is not None:
             gp.granule_uid = agrs.get('granule_uid')
 
+        #   Create new user tag record
+        userTag = UserTag.create(
+            user_id = user_id,
+            tag_name = tag_name
+        )
+
+        # Save new entities
         gp.save()
+        userTag.save()
 
         gp = gp_to_dict(gp)
         resp.status = HTTP_200

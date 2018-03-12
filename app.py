@@ -1,12 +1,10 @@
 import falcon
 
-from controllers.GranulePolygon import GranulePolygonController
+from controllers.gpolygon import GPolygon
 from models import PeeweeConnectionMiddleware
 
-dbConfig = ""
+app = falcon.API([PeeweeConnectionMiddleware()])
 
-app = falcon.API([PeeweeConnectionMiddleware(dbConfig)])
-
-gp = GranulePolygonController()
+gp = GPolygon()
 
 app.add_route('/gp', gp)

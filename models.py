@@ -1,5 +1,4 @@
 from peewee import *
-import arrow
 from playhouse.postgres_ext import *
 
 psql_db = PostgresqlDatabase(
@@ -10,7 +9,7 @@ psql_db = PostgresqlDatabase(
 )
 
 class PeeweeConnectionMiddleware(object):
-    def __init__(self, db_opts):
+    def __init__(self):
         pass
 
     def process_request(self, req, resp):
@@ -19,10 +18,6 @@ class PeeweeConnectionMiddleware(object):
     def process_response(self, req, resp, resource):
         if not psql_db.is_closed():
             psql_db.close()
-
-    def init_tables():
-        psql_db.create_tables([GranulePolygon], safe=True)
-
 
 class BaseModel(Model):
     class Meta:
@@ -42,3 +37,6 @@ class GranulePolygon(BaseModel):
 
     class Meta:
         db_table = 'granule_polygons'
+
+def init_tables():
+    psql_db.create_tables([GranulePolygon], safe=True)
